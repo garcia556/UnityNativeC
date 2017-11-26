@@ -6,5 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Main.unity
+    path: Assets/NaPl/Demo/Demo.unity
     guid: 1e40b31ea57f846cc8c8563cd1e235d8
