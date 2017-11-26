@@ -3,6 +3,7 @@ APP_NAME := UnityNativeC
 DIR_BUILD := $(WD)/Build
 LOG_FILE := $(WD)/Build.log
 PROJECT_PATH := $(WD)/UnitySrc
+PLUGIN_NAME := NaPlContent
 DIR_PLUGIN := $(PROJECT_PATH)/Assets/NaPl/Plugins
 SCENE := $(PROJECT_PATH)/Assets/NaPl/Demo/Demo.unity
 CFLAGS := -shared
@@ -10,11 +11,11 @@ CFLAGS := -shared
 ifeq ($(OS),Windows_NT)
 	UNITY_APP := $(PROGRAMFILES)/Unity/Editor/Unity.exe
 	CC := x86_64-w64-mingw32-gcc
-	PLUGIN_OUTPUT := NaPlContent.dll
+	PLUGIN_OUTPUT := $(PLUGIN_NAME).dll
 else ifeq ($(shell uname -s),Darwin)
 	UNITY_APP := /Applications/Unity/Unity.app/Contents/MacOS/Unity
 	CC := cc
-	PLUGIN_OUTPUT := /NaPlContent.bundle/Contents/MacOS/NaPlContent
+	PLUGIN_OUTPUT := Release/$(PLUGIN_NAME).bundle/Contents/MacOS/$(PLUGIN_NAME)
 	CFLAGS := $(CFLAGS) -undefined dynamic_lookup -arch i386 -arch x86_64
 	BIN := $(DIR_BUILD)/macos/$(APP_NAME).app/Contents/MacOS/$(APP_NAME)
 endif
@@ -38,7 +39,13 @@ show_log:
 	rm $(LOG_FILE)
 
 plugin:
-	$(CC) $(CFLAGS) -o $(DIR_PLUGIN)/$(PLUGIN_OUTPUT) $(DIR_PLUGIN)/NaPlContent.c
+	$(CC) $(CFLAGS) -o $(DIR_PLUGIN)/$(PLUGIN_OUTPUT) NativeSource/$(PLUGIN_NAME).c # for PC platforms
+	cp NativeSource/$(PLUGIN_NAME).c $(DIR_PLUGIN)
+
+plugin_macos_bundle:
+	rm -rf $(DIR_PLUGIN)/Release
+	cp NativeSource/$(PLUGIN_NAME).c Xcode
+	xcodebuild -project Xcode/$(PLUGIN_NAME).xcodeproj BUILD_DIR=$(DIR_PLUGIN)
 
 demo:
 	$(BIN) -logFile Run.log
