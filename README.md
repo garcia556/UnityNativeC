@@ -104,7 +104,7 @@ uint32_t murmurhash(const char *key, uint32_t len, uint32_t seed)
 ```
 
 ##### Same in JavaScript (taken from WebGL build)
-```JavaScript```
+```JavaScript
 function _murmurhash(i2, i5, i1) {
  i2 = i2 | 0;
  i5 = i5 | 0;
